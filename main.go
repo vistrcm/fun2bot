@@ -14,6 +14,10 @@ type fetchResult struct {
 	err     error
 }
 
+type botResponse struct {
+	response string
+	err	error
+}
 func main() {
 	// parse command line args
 	botUrl := flag.String("botUrl", "http://host", "specify bot url")
@@ -23,6 +27,7 @@ func main() {
 	var next time.Time
 	//var err error
 	var fetchDone chan fetchResult // if non-nil, Fetch is running
+	var postDone chan botResponse
 
 	for {
 		var fetchDelay time.Duration // initially 0 (no delay)
@@ -52,16 +57,25 @@ func main() {
 				break
 			}
 
-			log.Printf("strip url to send: %s\n", result.fetched)
-			botResp, err := sender.SendToURL(*botUrl, *room, result.fetched)
-			if err != nil {
-				panic(err)
-			}
 
-			log.Printf("Bot response: %v\n", botResp)
+			postDone = make(chan botResponse, 1)
+
+			go func() {
+				log.Printf("strip url to send: %s\n", result.fetched)
+				botResp, err := sender.SendToURL(*botUrl, *room, result.fetched)
+				if err != nil {
+					panic(err)
+				}
+
+				postDone <- botResponse{botResp, err}
+
+			}()
 
 			next = randomizer.GetNextTime()
 			log.Printf("next fetch time: %v", next)
+
+		case postResult := <-postDone:
+			log.Printf("Bot response: %v\n", postResult.response)
 		}
 	}
 }
