@@ -19,8 +19,11 @@ func GetNextTime() time.Time {
 	// Using a fixed seed will produce the same output on every run.
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 
-	desiredStdDev := 360.0 // manually tuned deviation parameter to make distribution wide enough
-	desiredMean := 1440.0  // 24 hours is 1440 minutes.
+	//desiredStdDev := 360.0 // manually tuned deviation parameter to make distribution wide enough
+	//desiredMean := 1440.0  // 24 hours is 1440 minutes.
+
+	desiredStdDev := 1.0 // manually tuned deviation parameter to make distribution wide enough
+	desiredMean := 4.0  // 24 hours is 1440 minutes.
 
 	n := round(r.NormFloat64()*desiredStdDev + desiredMean) // calculate randomized time delay
 	return time.Now().Add(time.Duration(n) * time.Minute)                   // return duration
