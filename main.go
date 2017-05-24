@@ -5,10 +5,10 @@ import (
 	"github.com/vistrcm/fun2bot/pts"
 	"github.com/vistrcm/fun2bot/randomizer"
 	"github.com/vistrcm/fun2bot/sender"
-	"log"
-	"time"
 	"github.com/vistrcm/fun2bot/xkcd"
+	"log"
 	"math/rand"
+	"time"
 )
 
 type fetchResult struct {
@@ -18,7 +18,7 @@ type fetchResult struct {
 
 type botResponse struct {
 	response string
-	err	error
+	err      error
 }
 
 // phraseToSend throw a dice. Decide which channel to use and retrieve phrase to send.
@@ -70,7 +70,6 @@ func main() {
 				log.Fatalf("Something goes wrong with %v\n", result)
 				break
 			}
-
 
 			postDone = make(chan botResponse, 1)
 

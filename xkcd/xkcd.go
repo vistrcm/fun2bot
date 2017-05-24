@@ -2,18 +2,18 @@ package xkcd
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
+	"math/rand"
 	"net/http"
 	"net/http/cookiejar"
 	"time"
-	"math/rand"
-	"errors"
 )
 
 const (
-	xkcdURL = "https://xkcd.com"
+	xkcdURL  = "https://xkcd.com"
 	retryNum = 3
 )
 
@@ -94,7 +94,6 @@ func getStrip(id int) (apiResponse, error) {
 		log.Fatalf("error on reading: %v. body: %v", err, body)
 		return *apiResp, errors.New("error on reading xkcd response")
 	}
-
 
 	err = json.Unmarshal(body, apiResp)
 	if err != nil {
