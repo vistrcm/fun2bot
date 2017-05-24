@@ -7,6 +7,9 @@ import (
 	"github.com/vistrcm/fun2bot/sender"
 	"log"
 	"time"
+	"github.com/vistrcm/fun2bot/xkcd"
+	"fmt"
+	"math/rand"
 )
 
 type fetchResult struct {
@@ -18,6 +21,18 @@ type botResponse struct {
 	response string
 	err	error
 }
+
+// phraseToSend throw a dice. Decide which channel to use and retrieve phrase to send.
+// values to decide hardcoded. for now about 30% goes to pts, other to xkcd
+func phraseToSend() (string, error) {
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	if r.Intn(100) >= 30 {
+		return xkcd.RandomStrip()
+	} else {
+		return pts.GetRandomImageURL()
+	}
+}
+
 func main() {
 	// parse command line args
 	botUrl := flag.String("botUrl", "http://host", "specify bot url")
@@ -46,7 +61,7 @@ func main() {
 			log.Printf("staring fetching")
 			fetchDone = make(chan fetchResult, 1)
 			go func() {
-				fetched, err := pts.GetRandomImageURL()
+				fetched, err := phraseToSend()
 				fetchDone <- fetchResult{fetched, err}
 			}()
 
