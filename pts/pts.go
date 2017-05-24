@@ -26,7 +26,7 @@ var httpClient = &http.Client{
 	Jar:     cookieJar,
 }
 
-// GetHTML mimic to  soup.GET but with own http client
+// get mimic to  soup.GET but with own http client
 func get(url string) (string, error) {
 	//defer fetch.CatchPanic("Get()")
 	resp, err := httpClient.Get(url)
@@ -79,7 +79,7 @@ func GetRandomImageURL() (result string, err error) {
 		}
 	}
 
-	return "", errors.New("Can not get image url. after ")
+	return "", errors.New("Can not get image url.")
 }
 
 // getStrip returns url of specific strip
@@ -106,6 +106,7 @@ func GetStripImageURL(id int) (result string, err error) {
 
 }
 
+// getMaxStrip returns number of last strip
 func getMaxStrip() (int, error) {
 	resp, err := get(ptsURL)
 	if err != nil {
