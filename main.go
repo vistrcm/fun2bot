@@ -8,7 +8,6 @@ import (
 	"log"
 	"time"
 	"github.com/vistrcm/fun2bot/xkcd"
-	"fmt"
 	"math/rand"
 )
 
