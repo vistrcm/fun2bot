@@ -1,10 +1,19 @@
-FROM golang:1.8
+# build application phase
+FROM golang:1.11 as builder
 
-RUN mkdir -p /go/src/github.com/vistrcm/fun2bot
 WORKDIR /go/src/github.com/vistrcm/fun2bot
-COPY . .
+COPY ./ .
 
-RUN go-wrapper download   # "go get -d -v ./..."
-RUN go-wrapper install    # "go install -v ./..."
+## handle dependencies
+RUN echo "installing deps" \
+    && go get -v -u github.com/golang/dep/cmd/dep\
+    && dep ensure -v
 
-ENTRYPOINT ["go-wrapper", "run"]
+# build with specific params to avoid issues of running in alpine
+RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -v -a -o fun2bot .
+
+# build image
+FROM scratch
+COPY --from=builder /go/src/github.com/vistrcm/fun2bot/fun2bot /fun2bot
+# array in etrypoint is a dirty hack to be able to pass parameters via CMD later
+ENTRYPOINT ["/fun2bot"]
