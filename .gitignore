@@ -16,3 +16,4 @@
 # idea files
 .idea/
 fun2bot.iml
+vendor/
